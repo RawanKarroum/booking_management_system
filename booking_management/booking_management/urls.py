@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from bookings.views import BookingAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/bookings/', BookingAPIView.as_view(), name='booking-create'),
 ]
