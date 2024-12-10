@@ -29,6 +29,16 @@ class BookingAPIView(APIView):
         room_data = response.json()
         if not room_data.get("available"):
             return Response({"error": "Room is not available"}, status=400)
+        
+        # Fetch hotel details using the hotel ID from room data
+        hotel_id = room_data.get("hotel")
+        hotel_service_url = f'http://localhost:8000/api/hotels/{hotel_id}/'
+        hotel_response = requests.get(hotel_service_url)
+
+        if hotel_response.status_code != 200:
+            return Response({"error": "Failed to fetch hotel details from Hotel Service"}, status=400)
+
+        hotel_data = hotel_response.json()
 
         # Create and save the booking
         booking = Booking.objects.create(
@@ -41,7 +51,7 @@ class BookingAPIView(APIView):
         response_data = {
             "id": booking.id,
             "room_id": booking.room_id,
-            "hotel_name": room_data["hotel"],  
+            "hotel_name": hotel_data["name"],  
             "room_price": room_data["price"],  
             "check_in_date": booking.check_in_date,
             "check_out_date": booking.check_out_date,
