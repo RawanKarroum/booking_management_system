@@ -47,7 +47,6 @@ class BookingAPIView(APIView):
             check_out_date=check_out_date,
         )
 
-        # Include room details in the response
         response_data = {
             "id": booking.id,
             "room_id": booking.room_id,
